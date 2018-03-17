@@ -13,17 +13,7 @@ class Concentration {
     
     private var indexOfOneAndOnlyFaceUpCard: Int? {
         get {
-            var foundIndex : Int?
-            for i in cards.indices {
-                if cards[i].isFaceUp {
-                    if foundIndex == nil {
-                        foundIndex = i
-                    } else {
-                        return nil // >=2 cards are faceUp
-                    }
-                }
-            }
-            return foundIndex
+            return cards.indices.filter{cards[$0].isFaceUp}.oneAndOnly
         }
         set {
             for i in cards.indices {
@@ -57,7 +47,7 @@ class Concentration {
         
         if !cards[index].isMatched {
             if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index {
-                if cards[index].identifier == cards[matchIndex].identifier {
+                if cards[index] == cards[matchIndex] {
                     cards[index].isMatched = true
                     cards[matchIndex].isMatched = true
                 }
@@ -78,5 +68,11 @@ class Concentration {
         
         addCards(numberOfPairsOfCards)
         shuffleCards()
+    }
+}
+
+extension Collection {
+    var oneAndOnly: Element? {
+        return count == 1 ? first : nil
     }
 }
